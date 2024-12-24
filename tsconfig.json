@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "NodeNext",
+        "outDir": "./dist",
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "rootDir": "./",
+        "esModuleInterop": true,
+        "strict": true,
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "skipLibCheck": true,
+        "removeComments": false,
+        "typeRoots": ["./node_modules/@types", "./src/type"],
+        "types": ["node", "express"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false,
+        "resolveJsonModule": true
+    },
+    "exclude": ["node_modules"],
+    "ts-node": {
+        "require": ["tsconfig-paths/register"],
+        "swc": true
+    },
+    "include": ["src/**/*"]
+}
