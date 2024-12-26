@@ -1,20 +1,36 @@
+import { injectable } from "inversify";
 import { Server } from "socket.io";
 import { corsOptions } from "./server";
+import http from "http";
 
-let io: Server | null = null;
+@injectable()
+export class SocketConfig {
+    private instance: Server | null = null;
 
-export const initSocket = (server: any) => {
-    io = new Server(server, {
-        cors: corsOptions,
-    });
-    if (!io) {
-        console.error("Socket is not initialized");
-        process.exit(1);
+    public init(server: http.Server) {
+        if (!this.instance) {
+            this.instance = new Server(server, {
+                cors: corsOptions,
+            });
+
+            console.log("[Socket]: Socket is initialized");
+        } else {
+            console.warn("[Socket]: Socket is already initialized");
+        }
     }
-    console.log("[Socket]: Socket is initialized");
-};
 
-export const getSocket = () => {
-    if (!io) throw new Error("Socket is not initialized");
-    return io;
-};
+    public getInstance(): Server {
+        if (!this.instance) {
+            throw new Error("[Socket]: Socket is not initialized");
+        }
+        return this.instance;
+    }
+
+    public reset() {
+        if (this.instance) {
+            this.instance.close();
+            this.instance = null;
+            console.log("[Socket]: Socket is reset");
+        }
+    }
+}

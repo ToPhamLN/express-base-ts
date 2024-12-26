@@ -1,33 +1,34 @@
+import { injectable, inject } from "inversify";
+import { TYPES } from "@/constants";
+import { AppContextService } from "@/services";
 import { Server, Socket } from "socket.io";
 import { USER_CONNECT, USER_DISCONNECT } from "../constants";
 
-const onlineUsers: Map<string, Set<string>> = new Map();
+@injectable()
+export class UserSocket {
+    constructor(
+        @inject(TYPES.AppContextService)
+        private readonly _appContextService: AppContextService
+    ) {}
 
-export const getOnlineUsers = () => Array.from(onlineUsers.keys());
+    public async init(io: Server, socket: Socket) {
+        await this.userConnect(io, socket);
+        await this.userDisconnect(io, socket);
+    }
 
-const userSocket = (io: Server, socket: Socket) => {
-    socket.on(USER_CONNECT, (userId: string) => {
-        const roomName = `room-${userId}`;
-        socket.join(roomName);
-        if (!onlineUsers.has(userId)) {
-            onlineUsers.set(userId, new Set());
-        }
-        onlineUsers.get(userId)?.add(socket.id);
-        io.emit(USER_CONNECT, Array.from(onlineUsers.keys()));
-    });
+    public async userConnect(io: Server, socket: Socket) {
+        socket.on(USER_CONNECT, (userId: string) => {
+            const roomName = `room-${userId}`;
+            socket.join(roomName);
+            this._appContextService.setUserOnline(userId, socket.id);
+            io.emit(USER_CONNECT, this._appContextService.getUsersOnline());
+        });
+    }
 
-    socket.on(USER_DISCONNECT, () => {
-        for (const [userId, socketIds] of onlineUsers.entries()) {
-            if (socketIds.has(socket.id)) {
-                socketIds.delete(socket.id);
-                if (socketIds.size === 0) {
-                    onlineUsers.delete(userId);
-                }
-                break;
-            }
-        }
-        io.emit(USER_CONNECT, Array.from(onlineUsers.keys()));
-    });
-};
-
-export default userSocket;
+    public async userDisconnect(io: Server, socket: Socket) {
+        socket.on(USER_DISCONNECT, () => {
+            this._appContextService.removeUserOnline(socket.id);
+            io.emit(USER_CONNECT, this._appContextService.getUsersOnline());
+        });
+    }
+}

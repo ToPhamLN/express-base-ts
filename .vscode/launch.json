@@ -7,7 +7,15 @@
             "name": "Debug TS",
             "program": "${workspaceFolder}/src/server.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/dist/**/*.js",
+                "${workspaceFolder}/src/**/*.ts"
+            ],
+            "sourceMapPathOverrides": {
+                "@/*": "${workspaceFolder}/src/*"
+            }
         }
     ]
 }

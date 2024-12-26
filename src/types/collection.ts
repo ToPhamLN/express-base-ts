@@ -1,7 +1,7 @@
 import { ERole, EUserStatus } from "@/constants";
 import { Document } from "mongoose";
 
-interface IConfigSchema {
+export interface IConfigSchema {
     createdAt: Date;
     updatedAt: Date;
 }

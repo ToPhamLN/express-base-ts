@@ -1,13 +1,26 @@
-import { Socket } from "socket.io";
-import { getSocket } from "@/configs";
-import userSocket from "./users";
+import { Server, Socket } from "socket.io";
+import { inject, injectable } from "inversify";
+import { SocketConfig } from "@/configs";
+import { TYPES } from "@/constants";
+import { UserSocket } from "./users";
 
-const connectWebSocket = () => {
-    const io = getSocket();
+@injectable()
+export class SocketHandlers {
+    private io: Server;
 
-    io.on("connection", (socket: Socket) => {
-        userSocket(io, socket);
-    });
-};
+    constructor(
+        @inject(TYPES.SocketConfig) private _socketConfig: SocketConfig,
+        @inject(TYPES.UserSocket) private _userSocket: UserSocket
+    ) {
+        this.io = this._socketConfig.getInstance();
+        this.setupDefaultHandlers();
+    }
 
-export default connectWebSocket;
+    private setupDefaultHandlers() {
+        this.io.on("connection", (socket: Socket) => {
+            this._userSocket.init(this.io, socket);
+        });
+    }
+}
+
+export * from "./users";

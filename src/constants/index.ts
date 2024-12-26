@@ -6,3 +6,4 @@ export * from "./event-socket";
 export * from "./key-redis";
 export * from "./status";
 export * from "./types";
+export * from "./routes";

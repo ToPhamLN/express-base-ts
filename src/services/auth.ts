@@ -17,7 +17,7 @@ import jwt from "jsonwebtoken";
 import { AppContextService } from "./app-context";
 
 @injectable()
-export class UserService {
+export class AuthService {
     redis: Redis;
 
     constructor(

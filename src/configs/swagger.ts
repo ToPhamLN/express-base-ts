@@ -6,8 +6,8 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "MMO documents API",
-            description: "Describe response and params API of MMO.",
+            title: "WWW.com documents API",
+            description: "Describe response and params API.",
             version: "1.0.0",
         },
         servers: [

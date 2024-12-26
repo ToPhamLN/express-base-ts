@@ -1,0 +1,24 @@
+{
+    "register": {
+        "success": "User created successfully.",
+        "email_exist": "Email already exists!"
+    },
+    "verify_email": {
+        "success": "Email verified successfully.",
+        "user_incorrect": "User id is incorrect!",
+        "otp_incorrect": "OTP is incorrect!"
+    },
+    "login": {
+        "success": "User logged in successfully.",
+        "not_found": "User not found!",
+        "password_incorrect": "Password is incorrect!"
+    },
+    "refresh_token": {
+        "success": "User logged in successfully.",
+        "invalid": "Refresh token is invalid!",
+        "not_found": "User not found!"
+    },
+    "logout": {
+        "success": "User logged out successfully."
+    }
+}

@@ -1,4 +1,4 @@
-# MMO Back-End
+# Bruhhhh
 
 ## Intallation
 

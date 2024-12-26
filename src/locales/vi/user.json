@@ -1,0 +1,24 @@
+{
+    "register": {
+        "success": "Tạo người dùng thành công.",
+        "email_exist": "Email đã tồn tại!"
+    },
+    "verify_email": {
+        "success": "Xác minh email thành công.",
+        "user_incorrect": "ID người dùng không chính xác!",
+        "otp_incorrect": "Mã OTP không chính xác!"
+    },
+    "login": {
+        "success": "Đăng nhập thành công.",
+        "not_found": "Không tìm thấy người dùng!",
+        "password_incorrect": "Mật khẩu không chính xác!"
+    },
+    "refresh_token": {
+        "success": "Đăng nhập thành công.",
+        "invalid": "Refresh token không hợp lệ!",
+        "not_found": "Không tìm thấy người dùng!"
+    },
+    "logout": {
+        "success": "Đăng xuất thành công."
+    }
+}

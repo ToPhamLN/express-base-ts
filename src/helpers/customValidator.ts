@@ -1,11 +1,11 @@
 import {
+    registerDecorator,
+    ValidationArguments,
+    ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-    ValidationArguments,
-    registerDecorator,
-    ValidationOptions,
 } from "class-validator";
-import { ObjectId, Schema, Types } from "mongoose";
+import { Types } from "mongoose";
 @ValidatorConstraint({ name: "isAfterDate", async: false })
 export class IsAfterDate implements ValidatorConstraintInterface {
     validate(endDate: number, args: ValidationArguments) {

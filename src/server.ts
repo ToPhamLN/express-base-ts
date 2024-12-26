@@ -3,28 +3,27 @@ import "reflect-metadata";
 import dotenv from "dotenv";
 dotenv.config();
 import http from "http";
-import app from "@/app";
-import { connectMongo, initSocket, redis } from "@/configs";
-import connectWebSocket from "@/socket";
+import App from "@/app";
+import { MongoDBConfig, SocketConfig, RedisClient, container } from "@/configs";
+import { TYPES } from "@/constants";
 
-const PORT = process.env.PORT || 8080;
-const server = http.createServer(app);
-initSocket(server);
-(async () => {
-    try {
-        console.log("[Redis]: Connected to Redis server");
-        const keys = await redis.keys("verify_email_*");
-        for await (const key of keys) {
-            const value = await redis.get(key);
-            console.log(`[Redis]: ${key}: ${value}`);
-        }
-    } catch (error) {
-        console.error("[Redis]: Error connecting to Redis:", error);
-    }
-})();
-connectWebSocket();
-connectMongo();
+async function bootstrap() {
+    const app = await new App().initializeApp();
+    const PORT = process.env.PORT || 8080;
+    const server = http.createServer(app);
 
-server.listen(PORT, () => {
-    console.log(`[Server]: Server is running on at http://localhost:${PORT}`);
-});
+    const socketConfig = container.get<SocketConfig>(TYPES.SocketConfig);
+    container.get<SocketConfig>(TYPES.SocketConfig);
+    container.get<MongoDBConfig>(TYPES.MongoDBConfig);
+    container.get<RedisClient>(TYPES.RedisClient);
+
+    socketConfig.init(server);
+
+    server.listen(PORT, () => {
+        console.log(
+            `[Server]: Server is running on at http://localhost:${PORT}`
+        );
+    });
+}
+
+bootstrap();

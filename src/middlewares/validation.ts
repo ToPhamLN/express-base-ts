@@ -3,9 +3,11 @@ import { validate, ValidationError } from "class-validator";
 import { Request, Response, NextFunction } from "express";
 import { Exception } from "@/helpers";
 import { STATUS } from "@/constants";
+import { injectable } from "inversify";
 
+@injectable()
 export class ValidationMiddleware {
-    static validate(
+    public validate(
         bodyClass?: new (...args: unknown[]) => object,
         queryClass?: new (...args: unknown[]) => object,
         paramsClass?: new (...args: unknown[]) => object

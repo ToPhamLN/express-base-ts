@@ -1,12 +1,14 @@
-import { corsOptions, definedSwaggerDocs } from "@/configs";
+import express, { Application } from "express";
+import cors from "cors";
 import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import cors from "cors";
-import express, { Application } from "express";
 import helmet from "helmet";
-import { ErrorMiddleware } from "./middlewares";
+import middleware from "i18next-http-middleware";
+import { initI18Config } from "@/configs";
+import { corsOptions, definedSwaggerDocs } from "@/configs";
 import defineRoutes from "./routes";
+import { ErrorMiddleware } from "./middlewares";
 
 class App {
     public app: Application;
@@ -14,8 +16,6 @@ class App {
     constructor() {
         this.app = express();
         this.config();
-        this.routes();
-        this.errorHandling();
     }
 
     private config() {
@@ -26,13 +26,33 @@ class App {
         this.app.use(helmet());
         this.app.use(compression());
         this.app.use(express.json());
-        definedSwaggerDocs(this.app);
+    }
+
+    public async initializeApp() {
+        await this.initI18n();
+        this.routes();
+        this.errorHandling();
+        return this.app;
+    }
+
+    private async initI18n() {
+        const i18Config = await initI18Config();
+        this.app.use(
+            middleware.handle(i18Config, {
+                removeLngFromUrl: true,
+            }) as unknown as express.RequestHandler
+        );
+        this.app.use((req, res, next) => {
+            res.locals.t = req.t ?? i18Config.t;
+            next();
+        });
     }
 
     private routes() {
+        definedSwaggerDocs(this.app);
         defineRoutes(this.app);
-        this.app.get("/", (req, res) => {
-            res.send("Hello WWW.COM!");
+        this.app.get("/api/v1/", (req, res) => {
+            res.send(req.t("common:welcome"));
         });
     }
 
@@ -42,4 +62,4 @@ class App {
     }
 }
 
-export default new App().app;
+export default App;

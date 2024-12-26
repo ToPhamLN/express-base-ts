@@ -8,7 +8,7 @@ export class ErrorMiddleware {
     static notFound(req: Request, res: Response, next: NextFunction): void {
         const error = new Exception(
             STATUS.NOT_FOUND,
-            `${req.originalUrl} not found`
+            `${req.originalUrl} ${req.t("common:not_found")}`
         );
         next(error);
     }
@@ -17,11 +17,12 @@ export class ErrorMiddleware {
         error: Error,
         req: Request,
         res: Response,
-        next: NextFunction
+        _next: NextFunction
     ): Response {
         let statusCode: number =
-            (error as Exception).statusCode || STATUS.NOT_FOUND;
-        let message: string = error.message;
+            (error as Exception).statusCode ?? STATUS.NOT_FOUND;
+        let message: string =
+            req.t((error as Exception).message) ?? error.message;
         const errors = (error as Exception).errors;
         const stack =
             configs.nodeEnv === "development"
@@ -36,19 +37,12 @@ export class ErrorMiddleware {
             message = "Resource not found";
         }
 
-        if (typeof errors === "string") {
-            return res.status(statusCode).json({
-                success: false,
-                message,
-                errorCode: errors,
-                ...(stack && { stack }),
-            });
-        }
-
         return res.status(statusCode).json({
             success: false,
             message,
-            errors,
+            ...(typeof errors === "string"
+                ? { errorCode: errors }
+                : { errors }),
             ...(stack && { stack }),
         });
     }

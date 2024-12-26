@@ -1,18 +1,18 @@
 import { COOKIE_REFRESH_TOKEN, TYPES } from "@/constants";
 import { Exception, Reply } from "@/helpers";
-import { UserService } from "@/services";
+import { AuthService } from "@/services";
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 
 @injectable()
-export class UserController extends Reply {
-    constructor(@inject(TYPES.UserService) private _userService: UserService) {
+export class AuthController extends Reply {
+    constructor(@inject(TYPES.UserService) private _authService: AuthService) {
         super();
     }
 
     public async register(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await this._userService.createUser(req.body);
+            const user = await this._authService.createUser(req.body);
 
             this.cookie(res, COOKIE_REFRESH_TOKEN, user.refreshToken);
             return this.success(res, "user:register.success", user, null);
@@ -29,7 +29,7 @@ export class UserController extends Reply {
                     "user:verify_email.user_incorrect"
                 );
 
-            const user = await this._userService.verifyOTP(req.body);
+            const user = await this._authService.verifyOTP(req.body);
 
             return this.success(res, "user:verify_email.success", user, null);
         } catch (error) {
@@ -39,7 +39,7 @@ export class UserController extends Reply {
 
     public async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await this._userService.login(req.body);
+            const user = await this._authService.login(req.body);
 
             this.cookie(res, COOKIE_REFRESH_TOKEN, user.refreshToken);
             return this.success(res, "user:login.success", user, null);
@@ -52,7 +52,7 @@ export class UserController extends Reply {
         try {
             const refreshToken = req.cookies[COOKIE_REFRESH_TOKEN];
 
-            const user = await this._userService.refreshToken(refreshToken);
+            const user = await this._authService.refreshToken(refreshToken);
 
             this.cookie(res, COOKIE_REFRESH_TOKEN, user.refreshToken);
             return this.success(res, "user:refresh_token.success", null, null);

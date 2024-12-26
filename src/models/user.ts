@@ -1,9 +1,9 @@
-import { Schema, model } from "mongoose";
-import { ERole, EUserStatus, USER_COLLECTION } from "@/constants";
+import { Schema } from "mongoose";
+import { ERole, EUserStatus } from "@/constants";
 import { configSchema } from "@/configs";
 import { IUserSchema } from "@/types";
 
-const userSchema = new Schema<IUserSchema>(
+export const userSchema = new Schema<IUserSchema>(
     {
         username: { type: String, required: true },
         email: { type: String, required: true },
@@ -27,7 +27,3 @@ const userSchema = new Schema<IUserSchema>(
     },
     configSchema
 );
-
-const UserModel = model<IUserSchema>(USER_COLLECTION, userSchema);
-
-export default UserModel;
