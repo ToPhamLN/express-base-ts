@@ -6,18 +6,17 @@ import http from "http";
 import App from "@/app";
 import { MongoDBConfig, SocketConfig, RedisClient, container } from "@/configs";
 import { TYPES } from "@/constants";
+import { SocketHandlers } from "./socket";
 
 async function bootstrap() {
     const app = await new App().initializeApp();
     const PORT = process.env.PORT || 8080;
     const server = http.createServer(app);
 
-    const socketConfig = container.get<SocketConfig>(TYPES.SocketConfig);
-    container.get<SocketConfig>(TYPES.SocketConfig);
+    container.get<SocketConfig>(TYPES.SocketConfig).init(server);
     container.get<MongoDBConfig>(TYPES.MongoDBConfig);
     container.get<RedisClient>(TYPES.RedisClient);
-
-    socketConfig.init(server);
+    container.get<SocketHandlers>(TYPES.SocketHandlers);
 
     server.listen(PORT, () => {
         console.log(

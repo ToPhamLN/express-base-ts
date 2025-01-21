@@ -21,7 +21,7 @@ export class RedisClient {
             },
         });
 
-        console.log("[RedisClient]: Redis initialized");
+        console.log("[Redis]: Redis is initialized");
     }
 
     public getClient(): Redis {

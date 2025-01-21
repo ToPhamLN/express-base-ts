@@ -17,6 +17,7 @@ export class SocketHandlers {
     }
 
     private setupDefaultHandlers() {
+        console.log("[Socket]: Socket is listenning.");
         this.io.on("connection", (socket: Socket) => {
             this._userSocket.init(this.io, socket);
         });

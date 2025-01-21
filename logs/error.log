@@ -1,0 +1,4 @@
+2025-01-21 13:57:09.929 [error]: 400 user:register.email_exist
+2025-01-21 14:29:35.336 [error]: 400 user:register.email_exist
+2025-01-21 14:29:39.526 [error]: 401 Token is required
+2025-01-21 14:30:02.519 [error]: 401 Token is required
